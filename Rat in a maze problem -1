@@ -1,0 +1,48 @@
+class Solution {
+    public ArrayList<String> findPath(int[][] mat) {
+        // Your code here
+        ArrayList<String> paths = new ArrayList<>();
+        int n = mat.length;
+        
+        if (mat[0][0] == 0) {
+            return paths;
+        }
+        
+        boolean[][] visited = new boolean[n][n];
+        solve(mat, 0, 0, "", paths, visited, n);
+        
+        return paths.isEmpty() ? new ArrayList<>(List.of("-1")) : paths;
+    }
+    
+    private void solve(int[][] mat, int x, int y, String path, ArrayList<String> paths, boolean[][] visited, int n) {
+        if (x == n - 1 && y == n - 1) {
+            paths.add(path);
+            return;
+        }
+        visited[x][y] = true;
+        if (isSafe(mat, x + 1, y, visited, n)) {
+            solve(mat, x + 1, y, path + 'D', paths, visited, n);
+        }
+        
+        if (isSafe(mat, x - 1, y, visited, n)) {
+            solve(mat, x - 1, y, path + 'U', paths, visited, n);
+        }
+        
+        if (isSafe(mat, x, y + 1, visited, n)) {
+            solve(mat, x, y + 1, path + 'R', paths, visited, n);
+        }
+        
+        // Move Left
+        if (isSafe(mat, x, y - 1, visited, n)) {
+            solve(mat, x, y - 1, path + 'L', paths, visited, n);
+        }
+        
+        // Unmark the current cell (backtracking)
+        visited[x][y] = false;
+    }
+    
+    private boolean isSafe(int[][] mat, int x, int y, boolean[][] visited, int n) {
+        return x >= 0 && x < n && y >= 0 && y < n && mat[x][y] == 1 && !visited[x][y];
+    }
+}
+    
